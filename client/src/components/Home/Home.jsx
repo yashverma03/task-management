@@ -1,8 +1,13 @@
 import React from 'react';
+import Task from '../Task/Task';
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <Task />
+      {/* <Task />
+      <Task /> */}
+    </div>
   );
 };
 

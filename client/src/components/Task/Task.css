@@ -1,36 +1,35 @@
-/* Task.css */
 .task-card {
-  margin: 20px;
+  margin: 50px 10px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.item {
+.task-item {
   margin: 10px 0;
   border: 1px solid #eee;
-  /* Add a light border to task items */
   padding: 10px;
   border-radius: 5px;
   background-color: #f9f9f9;
-  /* Background color for task items */
 }
 
 .delete-btn {
-  margin-left: 10px;
+
 }
 
-/* Style the "Add New Item" button */
-.add-new-item-btn {
-  background-color: #5bc0de;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
+.update-btn {
+
 }
 
-.add-new-item-btn:hover {
-  background-color: #46b8da;
+.add-btn {
+
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.task-saved {
+  width: 100%;
 }

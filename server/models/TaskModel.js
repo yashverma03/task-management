@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const taskCategory = {
-  TODO: 'to do',
+  TODO: 'todo',
   DOING: 'doing',
   DONE: 'done'
 };

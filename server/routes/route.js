@@ -22,7 +22,7 @@ router.get('/task', async (req, res) => {
   try {
     const category = req.query.category;
 
-    const filter = category ? { category } : { category: 'to do' };
+    const filter = category ? { category } : { category: 'todo' };
 
     const tasks = await TaskModel.find(filter);
 

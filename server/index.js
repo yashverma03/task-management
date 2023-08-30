@@ -2,15 +2,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongodb from './database/mongodb.js';
+import router from './routes/route.js';
 
 dotenv.config();
 
 const app = express();
 
+app.use('/api', router);
+
 mongodb();
 
-const PORT = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on PORT ${port}`);
 });

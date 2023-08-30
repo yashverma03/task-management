@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Task.css'; // Import the CSS file
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Task = ({ type }) => {
+const Task = ({ category }) => {
   const [items, setItems] = useState([]);
   const [newTitle, setNewTitle] = useState(''); // Separate state for new item title
   const [newDescription, setNewDescription] = useState(''); // Separate state for new item description
@@ -63,20 +63,20 @@ const Task = ({ type }) => {
       <div className='row'>
         <div className='col-md-12 mx-auto'>
           <div className='task-card'>
-            <h3 className='mb-4'>{type}</h3>
+            <h3 className='mb-4'>{category}</h3>
             {items.map((item, index) => (
               <div className='task-item d-flex justify-content-between align-items-center' key={index}>
                 {index === editingIndex ? (
                   <div >
                     <input
-                      type='text'
+                      category='text'
                       className='form-control'
                       placeholder='Title'
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
                     />
                     <input
-                      type='text'
+                      category='text'
                       className='form-control'
                       placeholder='Description'
                       value={editDescription}
@@ -108,7 +108,7 @@ const Task = ({ type }) => {
               <div>
                 <div className='mb-3'>
                   <input
-                    type='text'
+                    category='text'
                     className='form-control'
                     placeholder='Title'
                     value={newTitle}
@@ -117,7 +117,7 @@ const Task = ({ type }) => {
                 </div>
                 <div className='mb-3'>
                   <input
-                    type='text'
+                    category='text'
                     className='form-control'
                     placeholder='Description'
                     value={newDescription}

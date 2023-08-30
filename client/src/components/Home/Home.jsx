@@ -5,9 +5,9 @@ import './Home.css';
 const Home = () => {
   return (
     <div className='tasks'>
-      <Task type='To do' />
-      <Task type='Doing' />
-      <Task type='Done' />
+      <Task category='To do' />
+      <Task category='Doing' />
+      <Task category='Done' />
     </div>
   );
 };

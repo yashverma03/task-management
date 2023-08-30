@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Task.css'; // Import the CSS file
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import apiUrl from '../../utils/config';
 
 const Task = ({ category, categoryTitle }) => {
   const [items, setItems] = useState([]);
@@ -12,51 +13,89 @@ const Task = ({ category, categoryTitle }) => {
   const [editTitle, setEditTitle] = useState(''); // Separate state for editing item title
   const [editDescription, setEditDescription] = useState(''); // Separate state for editing item description
 
-  // Define the toggleNewItemInput function
-  const toggleNewItemInput = () => {
-    setShowNewItemInput(!showNewItemInput);
-    setEditingIndex(-1); // Reset editingIndex when toggling
-    setNewTitle(''); // Reset new item title
-    setNewDescription(''); // Reset new item description
-    setEditTitle(''); // Reset editing item title
-    setEditDescription(''); // Reset editing item description
-  };
+  console.log(apiUrl);
 
-  const handleAddItem = () => {
-    if (newTitle && newDescription) {
-      // Add a new item
-      setItems([...items, { title: newTitle, description: newDescription }]);
-      setNewTitle(''); // Reset new item title
-      setNewDescription(''); // Reset new item description
-      setShowNewItemInput(false);
+  // Function to fetch tasks from the server
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/task?category=${category}`);
+      setItems(response.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
     }
   };
 
-  const handleUpdateItem = () => {
+  // Fetch tasks when the component mounts
+  useEffect(() => {
+    fetchTasks();
+  }, [category]);
+
+  const toggleNewItemInput = () => {
+    setShowNewItemInput(!showNewItemInput);
+    setEditingIndex(-1);
+    setNewTitle('');
+    setNewDescription('');
+    setEditTitle('');
+    setEditDescription('');
+  };
+
+  const handleAddItem = async () => {
+    if (newTitle && newDescription) {
+      try {
+        // Send a POST request to create a new task
+        await axios.post(`${apiUrl}/task`, {
+          title: newTitle,
+          description: newDescription,
+          category: category,
+        });
+        // After successful creation, fetch tasks again to update the list
+        fetchTasks();
+        setNewTitle('');
+        setNewDescription('');
+        setShowNewItemInput(false);
+      } catch (error) {
+        console.error('Error creating task:', error);
+      }
+    }
+  };
+
+  const handleUpdateItem = async () => {
     if (editTitle && editDescription && editingIndex !== -1) {
-      // If editing an existing item, update it
-      const updatedItems = [...items];
-      updatedItems[editingIndex] = { title: editTitle, description: editDescription };
-      setItems(updatedItems);
-      setEditingIndex(-1); // Reset editingIndex
-      setEditTitle(''); // Reset editing item title
-      setEditDescription(''); // Reset editing item description
+      try {
+        // Send a PATCH request to update an existing task
+        await axios.patch(`${apiUrl}/task/${items[editingIndex]._id}`, {
+          title: editTitle,
+          description: editDescription,
+        });
+        // After successful update, fetch tasks again to update the list
+        fetchTasks();
+        setEditingIndex(-1);
+        setEditTitle('');
+        setEditDescription('');
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
     }
   };
 
   const handleEditItem = (index) => {
     const itemToEdit = items[index];
-    setEditTitle(itemToEdit.title); // Set the editing item title
-    setEditDescription(itemToEdit.description); // Set the editing item description
-    setNewTitle(''); // Reset new item title
-    setNewDescription(''); // Reset new item description
+    setEditTitle(itemToEdit.title);
+    setEditDescription(itemToEdit.description);
+    setNewTitle('');
+    setNewDescription('');
     setEditingIndex(index);
   };
 
-  const handleDeleteItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
+  const handleDeleteItem = async (index) => {
+    try {
+      // Send a DELETE request to delete a task
+      await axios.delete(`${apiUrl}/task/${items[index]._id}`);
+      // After successful deletion, fetch tasks again to update the list
+      fetchTasks();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
 
   return (

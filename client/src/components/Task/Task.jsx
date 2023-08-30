@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './Task.css'; // Import the CSS file
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
-const Task = ({ category }) => {
+const Task = ({ category, categoryTitle }) => {
   const [items, setItems] = useState([]);
   const [newTitle, setNewTitle] = useState(''); // Separate state for new item title
   const [newDescription, setNewDescription] = useState(''); // Separate state for new item description
@@ -63,20 +64,20 @@ const Task = ({ category }) => {
       <div className='row'>
         <div className='col-md-12 mx-auto'>
           <div className='task-card'>
-            <h3 className='mb-4'>{category}</h3>
+            <h3 className='mb-4'>{categoryTitle}</h3>
             {items.map((item, index) => (
               <div className='task-item d-flex justify-content-between align-items-center' key={index}>
                 {index === editingIndex ? (
                   <div >
                     <input
-                      category='text'
+                      type='text'
                       className='form-control'
                       placeholder='Title'
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
                     />
                     <input
-                      category='text'
+                      type='text'
                       className='form-control'
                       placeholder='Description'
                       value={editDescription}
@@ -108,7 +109,7 @@ const Task = ({ category }) => {
               <div>
                 <div className='mb-3'>
                   <input
-                    category='text'
+                    type='text'
                     className='form-control'
                     placeholder='Title'
                     value={newTitle}
@@ -117,7 +118,7 @@ const Task = ({ category }) => {
                 </div>
                 <div className='mb-3'>
                   <input
-                    category='text'
+                    type='text'
                     className='form-control'
                     placeholder='Description'
                     value={newDescription}
@@ -129,7 +130,7 @@ const Task = ({ category }) => {
                 </button>
               </div>
             ) : (
-                <button className='btn btn-outline-primary mb-3' onClick={toggleNewItemInput}>
+              <button className='btn btn-outline-primary mb-3' onClick={toggleNewItemInput}>
                 + Add a card
               </button>
             )}

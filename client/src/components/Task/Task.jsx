@@ -13,8 +13,6 @@ const Task = ({ category, categoryTitle }) => {
   const [editTitle, setEditTitle] = useState(''); // Separate state for editing item title
   const [editDescription, setEditDescription] = useState(''); // Separate state for editing item description
 
-  console.log(apiUrl);
-
   // Function to fetch tasks from the server
   const fetchTasks = async () => {
     try {

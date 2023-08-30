@@ -38,7 +38,7 @@ const Task = ({ category, categoryTitle }) => {
   };
 
   const handleAddItem = async () => {
-    if (newTitle && newDescription) {
+    if (newTitle) {
       try {
         // Send a POST request to create a new task
         await axios.post(`${apiUrl}/task`, {
@@ -58,7 +58,7 @@ const Task = ({ category, categoryTitle }) => {
   };
 
   const handleUpdateItem = async () => {
-    if (editTitle && editDescription && editingIndex !== -1) {
+    if (editTitle && editingIndex !== -1) {
       try {
         // Send a PATCH request to update an existing task
         await axios.patch(`${apiUrl}/task/${items[editingIndex]._id}`, {

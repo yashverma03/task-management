@@ -41,12 +41,17 @@ const Task = ({ category, categoryTitle }) => {
   const handleAddItem = async () => {
     if (newTitle) {
       try {
-        // Send a POST request to create a new task
+        // Find the highest order value in the current items and add 1 to it
+        const highestOrder = Math.max(...items.map((item) => item.order), -1) + 1;
+
+        // Send a POST request to create a new task with the "order" field
         await axios.post(`${apiUrl}/task`, {
           title: newTitle,
           description: newDescription,
           category: category,
+          order: highestOrder, // Include the "order" field
         });
+
         // After successful creation, fetch tasks again to update the list
         fetchTasks();
         setNewTitle('');
@@ -97,7 +102,7 @@ const Task = ({ category, categoryTitle }) => {
     }
   };
 
-  const handleDragEnd =async (result) => {
+  const handleDragEnd = async (result) => {
     // Check if the item was dropped outside of a valid Droppable area
     if (!result.destination) {
       return;
@@ -128,14 +133,14 @@ const Task = ({ category, categoryTitle }) => {
       order: index,   // The new order/index for the item
     }));
 
-    // Send a request to your server to update the item order in the database
+    // Send a single request to your server to update the item orders for all items
     try {
-      await axios.patch(`${apiUrl}/updateItemOrder`, {
+      await axios.patch(`${apiUrl}/tasks`, {
         category: category,  // Include the category if needed
         updatedOrder: updatedItemsOrder,
       });
     } catch (error) {
-      console.error('Error updating item order:', error);
+      console.error('Error in updating item orders:', error);
     }
   };
 

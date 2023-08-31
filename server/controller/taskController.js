@@ -2,10 +2,10 @@ import TaskModel from '../models/TaskModel.js';
 
 export const addTask = async (req, res) => {
   try {
-    const { title, description, category } = req.body;
+    const { title, description, category, order } = req.body;
 
     const newTask = await TaskModel.create({
-      title, description, category,
+      title, description, category, order
     });
 
     res.status(201).json(newTask);
@@ -18,11 +18,11 @@ export const addTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, category } = req.body;
+    const { title, description, category, order } = req.body;
 
     const updatedTask = await TaskModel.findOneAndUpdate(
       { _id: id },
-      { title, description, category },
+      { title, description, category, order },
       { new: true }
     );
 
@@ -43,7 +43,7 @@ export const getTasks = async (req, res) => {
 
     const filter = category ? { category } : { category: 'todo' };
 
-    const tasks = await TaskModel.find(filter);
+    const tasks = await TaskModel.find(filter).sort('order');;
 
     res.status(200).json(tasks);
   } catch (error) {
@@ -66,5 +66,26 @@ export const deleteTask = async (req, res) => {
   } catch (error) {
     console.error('Error deleting task:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const updateTaskOrder = async (req, res) => {
+  try {
+    const { category, updatedOrder } = req.body;
+
+    // Assuming that updatedOrder is an array of objects with _id and order properties
+    // Loop through the updatedOrder array and update the order of tasks
+    for (const taskData of updatedOrder) {
+      const { _id, order } = taskData;
+
+      // Find the task by _id and update its order
+      await TaskModel.findByIdAndUpdate(_id, { order });
+    }
+
+    // Respond with a success message
+    return res.status(200).json({ message: 'Task order updated successfully' });
+  } catch (error) {
+    console.error('Error updating task order:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };

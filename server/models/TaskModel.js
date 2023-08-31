@@ -18,6 +18,10 @@ const taskSchema = new mongoose.Schema({
     type: String,
     enum: Object.values(taskCategory),
     default: taskCategory.TODO
+  },
+  order: {
+    type: Number,
+    required: true
   }
 });
 

@@ -20,7 +20,13 @@
 
 ## Screenshots
 
-All cards displayed on home screen
+Home page
+
+![](https://github.com/yashverma03/task-management/assets/94443269/1092a78a-00cb-491a-89b1-77db316feb08)
+
+<br>
+
+All cards displayed on home page (after the cards have been added)
 
 ![](https://github.com/yashverma03/task-management/assets/94443269/ab8f9eb4-26eb-44e9-88ab-36605a956fec)
 

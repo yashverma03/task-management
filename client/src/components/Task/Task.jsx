@@ -3,6 +3,7 @@ import './Task.css'; // Import the CSS file
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import apiUrl from '../../utils/config';
+import { DragDropContext, Droppable, Draggable, DraggableLocation } from 'react-beautiful-dnd';
 
 const Task = ({ category, categoryTitle }) => {
   const [items, setItems] = useState([]);
@@ -96,51 +97,118 @@ const Task = ({ category, categoryTitle }) => {
     }
   };
 
+  const handleDragEnd =async (result) => {
+    // Check if the item was dropped outside of a valid Droppable area
+    if (!result.destination) {
+      return;
+    }
+
+    // Extract the source and destination Droppable locations
+    const source = result.source;
+    const destination = result.destination;
+
+    // Check if the item was dropped in a different location than where it started
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    // Reorder the items in the source and destination Droppables
+    const reorderedItems = [...items]; // Make a copy of your items array
+    const [movedItem] = reorderedItems.splice(source.index, 1); // Remove the dragged item
+    reorderedItems.splice(destination.index, 0, movedItem); // Insert the item at the new position
+
+    // Update the state with the new order of items
+    setItems(reorderedItems);
+
+    const updatedItemsOrder = reorderedItems.map((item, index) => ({
+      _id: item._id, // Assuming you have a unique identifier for each item
+      order: index,   // The new order/index for the item
+    }));
+
+    // Send a request to your server to update the item order in the database
+    try {
+      await axios.patch(`${apiUrl}/updateItemOrder`, {
+        category: category,  // Include the category if needed
+        updatedOrder: updatedItemsOrder,
+      });
+    } catch (error) {
+      console.error('Error updating item order:', error);
+    }
+  };
+
   return (
     <div className='container'>
       <div className='row'>
         <div className='col-md-12 mx-auto'>
           <div className='task-card'>
             <h3 className='mb-4'>{categoryTitle}</h3>
-            {items.map((item, index) => (
-              <div className='task-item d-flex justify-content-between align-items-center' key={index}>
-                {index === editingIndex ? (
-                  <div >
-                    <input
-                      type='text'
-                      className='form-control'
-                      placeholder='Title'
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                    />
-                    <input
-                      type='text'
-                      className='form-control'
-                      placeholder='Description'
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                    />
-                    <button
-                      className='btn btn-success btn-sm update-btn'
-                      onClick={() => handleUpdateItem()} // Use handleUpdateItem for updating
-                    >
-                      Update
-                    </button>
-                  </div>
-                ) : (
-                  <div className='task-saved' onClick={() => handleEditItem(index)}>
-                    <h5>{item.title}</h5>
-                    <p>{item.description}</p>
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="tasks">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="your-container-class" // Add your custom CSS class here
+                    id="tasks"
+                  >
+                    {items.map((item, index) => (
+                      <Draggable key={item._id} draggableId={item._id} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="your-item-class" // Add your custom CSS class here
+                          >
+                            <div className='task-item d-flex justify-content-between align-items-center' key={index}>
+                              {index === editingIndex ? (
+                                <div >
+                                  <input
+                                    type='text'
+                                    className='form-control'
+                                    placeholder='Title'
+                                    value={editTitle}
+                                    onChange={(e) => setEditTitle(e.target.value)}
+                                  />
+                                  <input
+                                    type='text'
+                                    className='form-control'
+                                    placeholder='Description'
+                                    value={editDescription}
+                                    onChange={(e) => setEditDescription(e.target.value)}
+                                  />
+                                  <button
+                                    className='btn btn-success btn-sm update-btn'
+                                    onClick={() => handleUpdateItem()} // Use handleUpdateItem for updating
+                                  >
+                                    Update
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className='task-saved' onClick={() => handleEditItem(index)}>
+                                  <h5>{item.title}</h5>
+                                  <p>{item.description}</p>
+                                </div>
+                              )}
+                              <button
+                                className='btn btn-danger btn-sm delete-btn'
+                                onClick={() => handleDeleteItem(index)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
                   </div>
                 )}
-                <button
-                  className='btn btn-danger btn-sm delete-btn'
-                  onClick={() => handleDeleteItem(index)}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+              </Droppable>
+            </DragDropContext>
 
             {showNewItemInput ? (
               <div>
@@ -174,7 +242,7 @@ const Task = ({ category, categoryTitle }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

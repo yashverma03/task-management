@@ -4,6 +4,7 @@
 
 ## Project Description
 
+- Build a Kanban board task management web application.
 - Home page shows all 3 categories (To do, Doing, Done) along with their respective cards.
 - A new card can be added using "Add a card" button. A dialog box opens prompting the user to write the title and description.
 - On double clicking on any card, the input fields are shown & the cards can be edited.

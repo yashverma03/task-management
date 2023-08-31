@@ -4,10 +4,14 @@ import './Home.css';
 
 const Home = () => {
   return (
-    <div className='tasks'>
-      <Task category='todo' categoryTitle='To do' />
-      <Task category='doing' categoryTitle='Doing' />
-      <Task category='done' categoryTitle='Done' />
+    <div>
+      <h4>Kanban Task Management</h4>
+
+      <div className='tasks'>
+        <Task category='todo' categoryTitle='To do' />
+        <Task category='doing' categoryTitle='Doing' />
+        <Task category='done' categoryTitle='Done' />
+      </div>
     </div>
   );
 };

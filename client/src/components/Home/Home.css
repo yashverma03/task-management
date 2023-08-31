@@ -1,3 +1,12 @@
+h4 {
+  font-size: 28px;
+  color: rgb(60, 60, 203);
+  margin-top: 40px;
+  font-weight: bold;
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 .tasks {
   display: flex;
   justify-content: space-between;

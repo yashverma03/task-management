@@ -71,18 +71,14 @@ export const deleteTask = async (req, res) => {
 
 export const updateTaskOrder = async (req, res) => {
   try {
-    const { category, updatedOrder } = req.body;
+    const { updatedOrder } = req.body;
 
-    // Assuming that updatedOrder is an array of objects with _id and order properties
-    // Loop through the updatedOrder array and update the order of tasks
     for (const taskData of updatedOrder) {
       const { _id, order } = taskData;
 
-      // Find the task by _id and update its order
       await TaskModel.findByIdAndUpdate(_id, { order });
     }
 
-    // Respond with a success message
     return res.status(200).json({ message: 'Task order updated successfully' });
   } catch (error) {
     console.error('Error updating task order:', error);

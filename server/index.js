@@ -9,8 +9,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // Parse JSON requests
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
 app.use('/api', router);
 
